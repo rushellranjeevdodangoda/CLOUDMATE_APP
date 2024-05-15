@@ -2,6 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import weatherService from './weatherService';
+import searchIcon from './images/search-icon.png'; // Import the search icon image
+import temperatureIcon from './images/temperature.png'; // Import temperature icon image
+import humidityIcon from './images/humidity.png'; // Import humidity icon image
+import windSpeedIcon from './images/windspeed.png'; // Import wind speed icon image
 
 const WeatherApp = () => {
   const [location, setLocation] = useState('Colombo,LK');
@@ -21,7 +25,6 @@ const WeatherApp = () => {
   useEffect(() => {
     getLatLon(location);
     if (code) {
-      console.log(code);
       getCurrentWeather(code);
       getForecastWeather(code);
     }
@@ -32,7 +35,7 @@ const WeatherApp = () => {
       {/* Header */}
       <header
         className='bg-cover bg-center bg-gray-800 p-4 shadow-md flex justify-center items-center'
-        style={{ backgroundImage: 'url(src/images/cloud_bg.webp)' }}
+        style={{ backgroundImage: 'url(src/images/sky_bg.jpg)' }}
       >
         <h1 className='text-3xl font-semibold text-white'>CLOUDMATE</h1>
       </header>
@@ -40,12 +43,18 @@ const WeatherApp = () => {
       {/* Main Content */}
       <main className='container mx-auto p-4'>
         {/* Search Bar */}
-        <div className='mb-8'>
+        <div className='relative mb-8'>
           <input
             type='text'
             placeholder='Enter location...'
-            className='border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring focus:border-blue-300 w-full'
+            className='border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring focus:border-blue-300 w-full pr-10'
             onChange={(e) => setLocation(e.target.value)}
+          />
+          {/* Search icon */}
+          <img
+            src={searchIcon}
+            alt='Search Icon'
+            className='absolute right-3 top-3 h-5 w-5 text-gray-400 cursor-pointer'
           />
         </div>
 
@@ -87,7 +96,7 @@ const WeatherApp = () => {
                     className='w-6 h-6 mr-2'
                   />
                   <p className='text-lg text-white'>
-                    Wind Speed: {currentWeather.wind.speed}m/s
+                    Wind Speed: {(currentWeather.wind.speed * 3.6).toFixed(2)} km/h
                   </p>
                 </div>
               </div>
@@ -101,21 +110,43 @@ const WeatherApp = () => {
             Weather Forecast
           </h2>
           <div className='grid grid-cols-1 gap-4 md:grid-cols-5'>
-            {/* Map over weatherForecast array to display forecast cards */}
             {loadingWeatherForecast || loadingLocation ? (
               <p className='text-white'>Loading forecast...</p>
             ) : (
               weatherForecast.slice(0, 5).map((forecast, index) => (
                 <div
                   key={index}
-                  className='bg-gradient-to-r from-blue-500 to-blue-900 bg-opacity-80 p-4 rounded-md shadow-md text-white'
+                  className='bg-gradient-to-r from-blue-500 to-blue-900 bg-opacity-80 p-8 rounded-md shadow-md text-white'
                 >
-                  <p className='text-lg font-semibold'>Day {index + 1}</p>
-                  <p>
-                    Temperature: {(forecast.main.temp - 273.15).toFixed(2)}°C
-                  </p>
-                  <p>Humidity: {forecast.main.humidity}%</p>
-                  <p>Wind Speed: {forecast.wind.speed} m/s</p>
+                  <p className='text-lg font-semibold mb-4'>Day {index + 1}</p>
+                  <div className='flex items-center mb-2'>
+                    <img
+                      src={temperatureIcon}
+                      alt='Temperature Icon'
+                      className='w-6 h-6 mr-2'
+                    />
+                    <p>
+                      Temperature: {(forecast.main.temp - 273.15).toFixed(2)}°C
+                    </p>
+                  </div>
+                  <div className='flex items-center mb-2'>
+                    <img
+                      src={humidityIcon}
+                      alt='Humidity Icon'
+                      className='w-6 h-6 mr-2'
+                    />
+                    <p>Humidity: {forecast.main.humidity}%</p>
+                  </div>
+                  <div className='flex items-center'>
+                    <img
+                      src={windSpeedIcon}
+                      alt='Wind Speed Icon'
+                      className='w-6 h-6 mr-2'
+                    />
+                    <p>
+                      Wind Speed: {(forecast.wind.speed * 3.6).toFixed(2)} km/h
+                    </p>
+                  </div>
                 </div>
               ))
             )}
