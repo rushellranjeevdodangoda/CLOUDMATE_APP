@@ -7,6 +7,15 @@ import temperatureIcon from './images/temperature.png'; // Import temperature ic
 import humidityIcon from './images/humidity.png'; // Import humidity icon image
 import windSpeedIcon from './images/windspeed.png'; // Import wind speed icon image
 
+// Import weather condition icons
+import clearIcon from './images/clear.png';
+import cloudsIcon from './images/clouds.png';
+import rainIcon from './images/rain.png';
+import snowIcon from './images/snow.png';
+import drizzleIcon from './images/drizzle.png'; // New weather condition icon
+import thunderstormsIcon from './images/thunderstorms.png'; // New weather condition icon
+import hazeIcon from './images/haze.png'
+
 const WeatherApp = () => {
   const [location, setLocation] = useState('Colombo,LK');
   const {
@@ -20,6 +29,17 @@ const WeatherApp = () => {
     getCurrentWeather,
     getForecastWeather,
   } = weatherService();
+
+  // Weather condition icons mapping
+  const weatherIcons = {
+    Clear: clearIcon,
+    Clouds: cloudsIcon,
+    Rain: rainIcon,
+    Snow: snowIcon,
+    Drizzle: drizzleIcon, // Include drizzle icon
+    Thunderstorm: thunderstormsIcon, // Include thunderstorms icon
+    Haze: hazeIcon,
+  };
 
   // useEffect to fetch weather data when the location changes
   useEffect(() => {
@@ -72,16 +92,21 @@ const WeatherApp = () => {
                   {currentWeather.sys.country}
                 </p>
               </div>
+              <div className="flex items-center">
+                <img
+                  src={weatherIcons[currentWeather.weather[0].main]}
+                  alt='Weather Icon'
+                  className='w-12 h-12 mr-4'
+                />
+                <p className='text-xl text-white'>{currentWeather.weather[0].main}</p>
+              </div>
               <div>
                 <h2 className='text-6xl font-semibold mb-2 text-white'>
                   {(currentWeather.main.temp - 273.15).toFixed(2)}°C
                 </h2>
-                <p className='text-lg text-white'>
-                  Weather Condition: {currentWeather.weather[0].main}
-                </p>
                 <div className='flex items-center'>
                   <img
-                    src='src/images/humidity.png'
+                    src={humidityIcon}
                     alt='Humidity Icon'
                     className='w-6 h-6 mr-2'
                   />
@@ -91,7 +116,7 @@ const WeatherApp = () => {
                 </div>
                 <div className='flex items-center'>
                   <img
-                    src='src/images/windspeed.png'
+                    src={windSpeedIcon}
                     alt='Wind Speed Icon'
                     className='w-6 h-6 mr-2'
                   />
